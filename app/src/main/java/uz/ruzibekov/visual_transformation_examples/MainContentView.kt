@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import uz.ruzibekov.visual_transformation_examples.vt.DateVisualTransformation
+import uz.ruzibekov.visual_transformation_examples.vt.WeightVisualTransformation
 import uz.ruzibekov.visual_transformation_examples.vt.PhoneVisualTransformation
 
 object MainContentView {
@@ -95,7 +96,17 @@ object MainContentView {
 
             Spacer(modifier = Modifier.height(10.dp))
 
+            var weight by remember { mutableStateOf("") }
 
+            TextField(
+                value = weight,
+                onValueChange = {
+                    if (it.length < 1000) weight = it
+                },
+                visualTransformation = WeightVisualTransformation(),
+                maxLines = 1,
+                label = labelView(textRes = R.string.label_weight)
+            )
         }
 
     }
