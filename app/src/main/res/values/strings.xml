@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Visual Transformation</string>
+    <string name="label_phone_number">Phone number</string>
+    <string name="label_date_of_birth">User Date of Birth</string>
 </resources>

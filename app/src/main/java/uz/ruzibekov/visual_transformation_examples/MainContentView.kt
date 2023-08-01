@@ -2,6 +2,7 @@ package uz.ruzibekov.visual_transformation_examples
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,11 +19,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextDirection.Companion.Content
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import uz.ruzibekov.visual_transformation_examples.ui.theme.Visual_Transformation_ExamplesTheme
+import uz.ruzibekov.visual_transformation_examples.vt.DateVisualTransformation
 import uz.ruzibekov.visual_transformation_examples.vt.PhoneVisualTransformation
 
 object MainContentView {
@@ -61,19 +61,52 @@ object MainContentView {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun Content() {
-
-        var data by remember { mutableStateOf("") }
-
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
+            var phone by remember { mutableStateOf("") }
+
+
             TextField(
-                value = data,
-                onValueChange = { data = it },
-                visualTransformation = PhoneVisualTransformation()
+                value = phone,
+                onValueChange = {
+                    if (it.length < 13) phone = it
+                },
+                visualTransformation = PhoneVisualTransformation(),
+                maxLines = 1,
+                label = labelView(textRes = R.string.label_phone_number)
             )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            var date by remember { mutableStateOf("") }
+
+            TextField(
+                value = date,
+                onValueChange = {
+                    if (it.length < 9) date = it
+                },
+                visualTransformation = DateVisualTransformation(),
+                maxLines = 1,
+                label = labelView(textRes = R.string.label_date_of_birth)
+            )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+
         }
+
+    }
+
+    @Composable
+    fun labelView(textRes: Int): @Composable () -> Unit = {
+        Text(
+            text = stringResource(id = textRes),
+            style = MaterialTheme.typography.bodyMedium,
+            color = Color.Gray
+        )
     }
 
 }

@@ -15,16 +15,37 @@ class PhoneVisualTransformation : VisualTransformation {
     private val offsetMapping = object : OffsetMapping {
 
         override fun originalToTransformed(offset: Int): Int { // 998901144147
-            if (offset in 1..3) return offset + 1
-            if (offset in 3..5) return offset + 2
-            if (offset in 6..8) return offset + 3
-            if (offset in 9..10) return offset + 4
-            if (offset in 11..12) return offset + 5
-            return 0
+
+            /*  textField-da kiritilgan VT ishlatilmagan ma'lumotda cursor indexlarida nechta o'zgarish bo'lishi kerakligi hisoblanadi
+             *  va offset qiymatiga shu son qo'shib, qaytariladi.
+             *  Misol:
+             *  offset = 0, hech qanday ma'lumot mavjud bo'lmaganida. bu holatda offsetning o'zi yoki nol soni qaytariladi. Chunki hech narsa yozilmagan TextField-da VT ishlatmaymiz.
+             *  offset = 1 va 3 oralig'i, bu holatda kiritilgan son oldidan "+" belgisi qo'yilganligi sababli, offsetga 1 soni qo'shib qaytariladi
+             *  offset = 3 va 5 oralig'i == 99890 soni kiritilganida. Bu holatda 2ta VT mavjud bo'ladi "+" belgisi va bo'sh joy. +998 90. Shu sababdan offset-ga 2soni qo'shib qaytariladi.
+             */
+
+            return when (offset) { //offset = textField-da kiritilgan o'zgarishsiz ma'lumotdagi cursorning indeksi
+                in 1..3 -> offset + 1
+                in 3..5 -> offset + 2
+                in 6..8 -> offset + 3
+                in 9..10 -> offset + 4
+                in 11..12 -> offset + 5
+                else -> 0
+            }
         }
 
-        override fun transformedToOriginal(offset: Int): Int {
-            return 0
+        /*  TextField-da qay
+        *
+        * */
+        override fun transformedToOriginal(offset: Int): Int { // +998 90 114-41-47
+            return when (offset) { // offset = textField-da kiritilgan ma'lumotning VT ishlatilgandagi cursorning indeksi
+                in 1..4 -> offset - 1
+                in 5..7 -> offset - 2
+                in 8..11 -> offset - 3
+                in 12..14 -> offset - 4
+                in 15..17 -> offset - 5
+                else -> 0
+            }
         }
     }
 
